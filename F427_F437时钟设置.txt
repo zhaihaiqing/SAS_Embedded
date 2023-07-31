@@ -1,0 +1,25 @@
+->1时钟问题
+
+STM32F427默认外部HSE为25M，如果使用8M晶振需要做如下修改
+修改固件库里面stm32f4xx.h里面的139行
+#if !defined  (HSE_VALUE) 
+  #define HSE_VALUE    ((uint32_t)8000000) /*!< Value of the External oscillator in Hz */
+#endif /* HSE_VALUE */
+
+然后修改PLL倍频参数
+
+/************************* PLL Parameters *************************************/
+/* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLL_M) * PLL_N */
+#define PLL_M      8
+#define PLL_N      336
+
+/* SYSCLK = PLL_VCO / PLL_P */
+#define PLL_P      2
+
+/* USB OTG FS, SDIO and RNG Clock =  PLL_VCO / PLLQ */
+#define PLL_Q      7
+
+/******************************************************************************/
+
+之后，系统时钟为168M，USB时钟为48M
+
